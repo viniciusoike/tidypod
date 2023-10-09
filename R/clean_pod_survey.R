@@ -4,7 +4,7 @@ clean_srv <- function(df) {
   df <- as.data.frame(df)
 
   df <- df |>
-    dplyr::rename(dplyr::all_of("code_zone" = "zona")) |>
+    dplyr::rename(code_zone = zona) |>
     tidyr::pivot_longer(
       cols = -code_zone,
       names_to = "variable",
@@ -73,7 +73,7 @@ srv_compute_estimates <- function(df) {
         "point_estimate"),
       criteria = stringr::str_remove(.data$variable, "se\\.")) |>
     tidyr::pivot_wider(
-      id_cols = c("name_muni", "criteria"),
+      id_cols = c("code_zone", "criteria"),
       names_from = "estimate",
       values_from = "value") |>
     dplyr::mutate(
