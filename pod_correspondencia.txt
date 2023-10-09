@@ -1,0 +1,88 @@
+# Corresp
+
+9 CD_ENTRE 5 = 2 (Completa sem viagem)
+9 CD_ENTRE 6 = 1 (Completa com viagem)
+
+11 TIPO_DOM,
+1 = 1
+2 = 2
+3 = -- (Favela)
+
+19 = 21 CONDMORA (equivalente)
+34 = 36 NAO_DCL_IT (equivalente)
+
+35 = 37 CRITERIO_BR
+1 = 1 (A1 = A)
+2 = 1 (A2 = A)
+3 = 2 (B1 = B1)
+4 = 3 (B2 = B2)
+5 = 4 (C1 = C1)
+6 = 5 (C2 = C2)
+7 = 6 (D = D ou E)
+8 = 6 (E = D ou E)
+
+40 = 43 CD_RENFA (equivalente)
+
+45 = 48 SIT_FAM (equivalente)
+
+47 = 50 SEXO (equivalente)
+
+48 = 51 ESTUDA
+1 = 1 (Nao)
+2 = 2 (Creche / Pre-escola)
+3 = 3 (1o grau / Fundamental)
+4 = 4 (2o grau / Medio)
+6 = 5 (3o grau / superior) = (Superior/Universitario)
+7 = 6 (Outros)
+
+49 = 52 GRAU_INS (equivalente)
+
+50 = 53 CD_ATIVI (equivalente)
+51 = 54 CO_REN_I (equivalente)
+57 = 60 TIPO_ESC (equivalente)
+62 = 65 TRAB1_RE (equivalente)
+
+65 = 68 SETOR1 (equivalente)
+66 = 69 VINC1 (equivalente)
+
+71 = 74 TRAB2_RE (equivalente)
+72 = 75 TRABEXT2 (equivalente)
+78 = 81 DIA_SEM (equivalente)
+
+
+100 = 103 MOTIVO_O , 102 = 105 MOT_SRES
+equivalente, exceto que 2017 tem 11 - Refeicao
+
+105 = 108 MODO1
+116 = 119 MODOPRIN
+
+01 + 09 = 04
+02 + 10 = 05
+03 + 11 = 06
+04 = 07
+05 = 08
+06 = 09
+07 = 10
+08 = 11, 12? (taxi = taxi convencional x nao-convencional)
+12 = 01
+13 = 02
+14 = 13, 14? (moto = dirigindo moto x passageiro na moto)
+15 = 15
+16 = 16
+17 = 17
+
+TIPVG (equivalente)
+PAG_VIAG (equivalente)
+
+119 = 121 TP_ESAUTO
+Igual exceto que 2017 tem 8 (e-facil)
+
+122 = 125 TP_ESBICI
+
+1 = 1
+2 = 2
+3 = 3
+4 = 4
+5 = 8 (5 + 6 + 7 + 8)
+
+
