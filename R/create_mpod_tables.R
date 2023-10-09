@@ -33,7 +33,7 @@ get_pod_microdata <- function(dir, id, labelled = TRUE) {
     )
 
 
-  pod <- design_pod(data = pod, id = id)
+  pod <- design_pod(df = pod, id = id)
 
   return(pod)
 
