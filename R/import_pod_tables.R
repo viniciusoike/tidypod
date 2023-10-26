@@ -27,7 +27,11 @@ connect_pod_db <- function() {
 #' @return Either a `tibble` or a `sf` object with aggregated information for each
 #' OD zone.
 #' @export
-create_pod_tables <- function(cached, geo = FALSE, tables = "all") {
+import_pod_tables <- function(cached = TRUE, geo = FALSE, tables = "all") {
+
+  if (cached) {
+    vroom::vroom("...")
+  }
 
   # Create a connection with the database
   arquivo_db <- "data-raw/DB_ORIGEM_DESTINO_SP"
@@ -99,7 +103,7 @@ pod_table_overall <- function(con) {
     dplyr::collect()
 
   tbl_overall <- id_zones |>
-    dplyr::left_join(tab_overall) |>
+    dplyr::left_join(tab_overall, by = "code_zone") |>
     dplyr::mutate(
       pop_density = .data$pop / .data$area_ha,
       jobs_density = .data$jobs / .data$area_ha)
@@ -362,7 +366,8 @@ pod_table_jobs <- function(con) {
   jobs <- jobs |>
     dplyr::mutate(value = as.numeric(.data$value)) |>
     dplyr::group_by(.data$code_zone) |>
-    dplyr::mutate(share = .data$value / sum(.data$value))
+    dplyr::mutate(share = .data$value / sum(.data$value)) |>
+    dplyr::ungroup()
 
   # Broader employment groups #
   df_label <- data.frame(
@@ -375,7 +380,8 @@ pod_table_jobs <- function(con) {
   # Aggregate into broader groups #
   tbl_jobs <- jobs |>
     dplyr::left_join(df_label, by = "jobs_group") |>
-    summarise(total = sum(.data$value), .by = c("code_zone", "jobs_label"))
+    dplyr::group_by(.data$code_zone, .data$jobs_label) |>
+    dplyr::summarise(total = sum(.data$value)) |>
     dplyr::group_by(.data$code_zone) |>
     dplyr::mutate(share = .data$total / sum(.data$total)) |>
     dplyr::ungroup() |>

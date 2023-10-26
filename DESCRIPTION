@@ -22,6 +22,7 @@ Imports:
     purrr,
     rlang,
     RSQLite,
+    sf,
     stringi,
     stringr,
     survey,

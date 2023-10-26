@@ -1,3 +1,63 @@
+#' Import POD travel tables
+#'
+#' @inheritParams import_pod_tables
+#'
+#' @return A named `list`
+#' @export
+import_pod_travel_tables <- function(cached = TRUE, geo = FALSE, tables = "all") {
+
+  all_tables <- c("motive", "mode", "od", "time")
+
+  # Select tables
+  if (tables == "all") {
+    name_tables <- c("motive", "mode", "od", "time")
+  } else {
+    stopifnot(all(tables %in% all_tables))
+    name_tables <- tables
+  }
+
+  if (cached) {
+
+    lapply(name_tables, import_cached)
+
+  }
+
+  # Create a connection with the database
+  arquivo_db <- "data-raw/DB_ORIGEM_DESTINO_SP"
+  con <- DBI::dbConnect(RSQLite::SQLite(), dbname = arquivo_db)
+
+
+
+  name_tables <- paste0("travel_", name_tables)
+
+  # Get all POD tables
+  tbls <- suppressWarnings(lapply(name_tables, get_pod_table, con))
+  names(tbls) <- name_tables
+
+  # Joins the POD data to the zones shape file
+  if (geo) {
+
+    add_geo_dimension <- function(df) {
+
+      stopifnot(any("code_zone" %in% names(df)))
+
+      dplyr::left_join(
+        dplyr::select(zones, "code_zone"), df, by = "code_zone"
+      )
+
+    }
+
+    out <- lapply(tbls, add_geo_dimension)
+
+  } else {
+    out <- tbls
+    }
+  # Disconnect
+  DBI::dbDisconnect(con)
+  return(out)
+
+}
+
 #' @importFrom rlang .data
 pod_table_travel_motive <- function(con, grouped = FALSE) {
 
@@ -53,21 +113,6 @@ pod_table_travel_motive <- function(con, grouped = FALSE) {
       c("motive_group" = "subcat", "ntravel" = "total")
     ))
 
-  if (grouped) {
-    # Return a grouped wide table with totals and shares
-    tbl_motive <- tbl_submotive |>
-      dplyr::rename(dplyr::all_of(c("total" = "ntravel"))) |>
-      tidyr::pivot_wider(
-        id_cols = "code_zone",
-        names_from = "motive_group",
-        values_from = c("total", "share")
-      )
-
-    tbl_motive <- janitor::clean_names(tbl_motive)
-    return(tbl_motive)
-
-  }
-
   # Join all tables into single table
   tbl_motive <- tbl_motive |>
     dplyr::left_join(df_cat, by = "motive") |>
@@ -78,7 +123,18 @@ pod_table_travel_motive <- function(con, grouped = FALSE) {
       c("code_zone", "motive", "motive_group", "motive_subgroup", "ntravel")
     ))
 
-  return(tbl_motive)
+  # Return a grouped wide table with totals and shares
+  tbl_motive_grouped <- tbl_submotive |>
+    dplyr::rename(dplyr::all_of(c("total" = "ntravel"))) |>
+    tidyr::pivot_wider(
+      id_cols = "code_zone",
+      names_from = "motive_group",
+      values_from = c("total", "share")
+    )
+
+  tbl_motive_grouped <- janitor::clean_names(tbl_motive_grouped)
+
+  return(list(motive = tbl_motive, motive_grouped = tbl_motive_grouped))
 
 }
 

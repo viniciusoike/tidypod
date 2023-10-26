@@ -1,4 +1,3 @@
-
 utils::globalVariables(
   c("ipca_adjust",
     "ipc_fipe_adjust",
@@ -7,7 +6,8 @@ utils::globalVariables(
     "correcao_pnad_real",
     "cities",
     "districts",
-    "zones"))
+    "zones")
+  )
 
 add_od_dimension <- function(dat) {
 

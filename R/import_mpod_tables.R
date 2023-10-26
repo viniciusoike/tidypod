@@ -1,3 +1,6 @@
+import_pod_microdata_tables <- function() {
+  }
+
 get_pod_microdata <- function(dir, id, labelled = TRUE) {
 
   stopifnot(id %in% c("pessoa", "domicilio", "familia", "viagem"))

@@ -4,9 +4,9 @@ clean_srv <- function(df) {
   df <- as.data.frame(df)
 
   df <- df |>
-    dplyr::rename(code_zone = zona) |>
+    dplyr::rename(dplyr::all_of(c("code_zone" = "zona"))) |>
     tidyr::pivot_longer(
-      cols = -code_zone,
+      cols = -"code_zone",
       names_to = "variable",
       values_to = "value"
     )
