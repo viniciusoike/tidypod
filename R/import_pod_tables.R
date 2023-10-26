@@ -30,7 +30,20 @@ connect_pod_db <- function() {
 import_pod_tables <- function(cached = TRUE, geo = FALSE, tables = "all") {
 
   if (cached) {
-    vroom::vroom("...")
+
+    if (geo) {
+
+      dat <- readr::read_csv(
+        "https://github.com/viniciusoike/tidypod/blob/main/cached/geo_pod.rds"
+        )
+    } else {
+      dat <- readr::read_csv(
+        "https://github.com/viniciusoike/tidypod/blob/main/cached/tbl_pod.csv.gz"
+        )
+    }
+
+    return(dat)
+
   }
 
   # Create a connection with the database

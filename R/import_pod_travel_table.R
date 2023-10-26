@@ -6,6 +6,29 @@
 #' @export
 import_pod_travel_tables <- function(cached = TRUE, geo = FALSE, tables = "all") {
 
+  if (cached) {
+
+    if (geo) {
+
+      dat <- readr::read_rds(
+        "https://github.com/viniciusoike/tidypod/blob/main/cached/geo_pod_travel.rds"
+      )
+    } else {
+      dat <- readr::read_rds(
+        "https://github.com/viniciusoike/tidypod/blob/main/cached/tbl_pod_travel.rds"
+      )
+    }
+
+    return(dat)
+
+  }
+
+
+
+  if (cached) {
+    readr::read_rds("https://github.com/viniciusoike/tidypod/blob/main/cached/tbl_pod.csv.gz")
+  }
+
   all_tables <- c("motive", "mode", "od", "time")
 
   # Select tables
@@ -26,8 +49,6 @@ import_pod_travel_tables <- function(cached = TRUE, geo = FALSE, tables = "all")
   arquivo_db <- "data-raw/DB_ORIGEM_DESTINO_SP"
   con <- DBI::dbConnect(RSQLite::SQLite(), dbname = arquivo_db)
 
-
-
   name_tables <- paste0("travel_", name_tables)
 
   # Get all POD tables
@@ -39,11 +60,13 @@ import_pod_travel_tables <- function(cached = TRUE, geo = FALSE, tables = "all")
 
     add_geo_dimension <- function(df) {
 
-      stopifnot(any("code_zone" %in% names(df)))
-
-      dplyr::left_join(
-        dplyr::select(zones, "code_zone"), df, by = "code_zone"
-      )
+      if (any("code_zone" %in% names(df))) {
+        dplyr::left_join(
+          dplyr::select(zones, "code_zone"), df, by = "code_zone"
+        )
+      } else {
+        df
+      }
 
     }
 
