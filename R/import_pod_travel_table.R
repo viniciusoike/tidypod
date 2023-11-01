@@ -11,22 +11,16 @@ import_pod_travel_tables <- function(cached = TRUE, geo = FALSE, tables = "all")
     if (geo) {
 
       dat <- readr::read_rds(
-        "https://github.com/viniciusoike/tidypod/blob/main/cached/geo_pod_travel.rds"
+        "https://github.com/viniciusoike/tidypod/raw/main/cached/geo_pod_travel.rds"
       )
     } else {
       dat <- readr::read_rds(
-        "https://github.com/viniciusoike/tidypod/blob/main/cached/tbl_pod_travel.rds"
+        "https://github.com/viniciusoike/tidypod/raw/main/cached/tbl_pod_travel.rds"
       )
     }
 
     return(dat)
 
-  }
-
-
-
-  if (cached) {
-    readr::read_rds("https://github.com/viniciusoike/tidypod/blob/main/cached/tbl_pod.csv.gz")
   }
 
   all_tables <- c("motive", "mode", "od", "time")

@@ -33,12 +33,12 @@ import_pod_tables <- function(cached = TRUE, geo = FALSE, tables = "all") {
 
     if (geo) {
 
-      dat <- readr::read_csv(
-        "https://github.com/viniciusoike/tidypod/blob/main/cached/geo_pod.rds"
+      dat <- readr::read_rds(
+        "https://github.com/viniciusoike/tidypod/raw/main/cached/geo_pod.rds"
         )
     } else {
-      dat <- readr::read_csv(
-        "https://github.com/viniciusoike/tidypod/blob/main/cached/tbl_pod.csv.gz"
+      dat <- vroom::vroom(
+        "https://github.com/viniciusoike/tidypod/raw/main/cached/tbl_pod.csv.gz"
         )
     }
 
