@@ -430,7 +430,7 @@ pod_table_jobs_sector <- function(con) {
       sector = dplyr::case_when(
         sector == "Secundário" ~ "secondary",
         sector == "Terciário" ~ "tertiary",
-        sector == "Outros" ~ "other"
+        sector == "Outros" ~ "sector_other"
       ),
       share = .data$total / sum(.data$total)
     ) |>
