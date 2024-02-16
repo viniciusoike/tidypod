@@ -49,3 +49,10 @@ po/*~
 rsconnect/
 
 temp/*
+
+data-raw/OD-2017/
+data-raw/shapesMiniAnel/
+data-raw/cities.gpkg
+data-raw/districts.gpkg
+data-raw/zones_od.gpkg
+data-raw/DB_ORIGEM_DESTINO_SP
