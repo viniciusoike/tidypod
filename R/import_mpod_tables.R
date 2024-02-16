@@ -28,13 +28,12 @@ get_pod_microdata <- function(dir, id, labelled = TRUE) {
 
   pod <- pod |>
     mutate(
-      renda_fa_ipca = renda_fa * (ipca_correcao + correcao_pnad_real - 1),
-      renda_fa_ipc_fipe = renda_fa * (ipc_fipe_correcao + correcao_pnad_real - 1),
+      renda_fa_ipca = .data[["renda_fa"]] * (ipca_correcao + correcao_pnad_real - 1),
+      renda_fa_ipc_fipe = .data[["renda_fa"]] * (ipc_fipe_correcao + correcao_pnad_real - 1),
       d_estuda = ifelse(estuda == "Nao", "NaoEstuda", "Estuda"),
-      faixas_renda = findInterval(renda_fa, faixas, rightmost.closed = T),
-      d_banh = ifelse(qt_banho > 0, 1, qt_banho)
+      faixas_renda = findInterval(.data[["renda_fa"]], faixas, rightmost.closed = T),
+      d_banh = ifelse(.data[["qt_banho"]] > 0, 1, .data[["qt_banho"]])
     )
-
 
   pod <- design_pod(df = pod, id = id)
 
