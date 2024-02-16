@@ -15,9 +15,9 @@ clean_geometry <- function(shp) {
 }
 
 # Import raw shapefiles
-muni <- st_read("data-raw/Mapas-OD2017/Shape-OD2017/Municipios_2017_region.shp")
-dstr <- st_read("data-raw/Mapas-OD2017/Shape-OD2017/Distritos_2017_region.shp")
-zone <- st_read("data-raw/Mapas-OD2017/Shape-OD2017/Zonas_2017_region.shp")
+muni <- st_read(here::here("data-raw/OD-2017/Mapas-OD2017/Shape-OD2017/Municipios_2017_region.shp"))
+dstr <- st_read(here::here("data-raw/OD-2017/Mapas-OD2017/Shape-OD2017/Distritos_2017_region.shp"))
+zone <- st_read(here::here("data-raw/OD-2017/Mapas-OD2017/Shape-OD2017/Zonas_2017_region.shp"))
 
 # Cities
 
@@ -43,6 +43,16 @@ dstr <- dstr |>
     name_district = NomeDistri,
     area_ha = Area_ha
   )
+
+# Match districts with cities
+dstr_cities <- dstr |>
+  st_centroid() |>
+  st_join(select(muni, code_muni, name_muni)) |>
+  st_drop_geometry()
+
+dstr <- dstr |>
+  select(code_district) |>
+  left_join(dstr_cities, by = "code_district")
 
 # Zone
 
@@ -81,11 +91,11 @@ shrink_cbd <- centro_expandido |>
 # a spatial/areal interpolation is needed
 zone <- st_join(zone, shrink_cbd)
 zone <- st_make_valid(zone)
-zone <- dplyr::mutate(zone, is_cbd = ifelse(is.na(is_cbd), 0L, 1L))
+zone <- mutate(zone, is_cbd = ifelse(is.na(is_cbd), 0L, 1L))
 
 dstr <- st_join(dstr, shrink_cbd)
 dstr <- st_make_valid(dstr)
-dstr <- dplyr::mutate(dstr, is_cbd = ifelse(is.na(is_cbd), 0L, 1L))
+dstr <- mutate(dstr, is_cbd = ifelse(is.na(is_cbd), 0L, 1L))
 
 # Import table with districts and regions (only for SP)
 district_regions <- read_csv("data-raw/district_regions.csv")
@@ -100,16 +110,17 @@ id_regions <- tribble(
   5, "Norte II",
   6, "Norte I",
   7, "Leste II",
-  8, "Sul"
+  8, "Sul",
+  9, "Oeste"
 )
 
 # Join regions with codes and simplify the name of each region
 district_regions <- district_regions |>
-  dplyr::mutate(
+  mutate(
     region_simplified = stringr::str_replace(name_region, "( )|(-)", "_"),
     region_simplified = stringr::str_to_lower(region_simplified)
   ) |>
-  dplyr::left_join(id_regions, by = "name_region")
+  left_join(id_regions, by = "name_region")
 
 # Join zones and districts with regions
 zone <- left_join(zone, district_regions, by = "name_district")
