@@ -127,6 +127,6 @@ zone <- left_join(zone, district_regions, by = "name_district")
 dstr <- left_join(dstr, district_regions, by = "name_district")
 
 # Export
-st_write(zone, "data-raw/zones_od.gpkg")
-st_write(dstr, "data-raw/districts.gpkg")
-st_write(muni, "data-raw/cities.gpkg")
+st_write(zone, "data-raw/zones_od.gpkg", append = FALSE)
+st_write(dstr, "data-raw/districts.gpkg", append = FALSE)
+st_write(muni, "data-raw/cities.gpkg", append = FALSE)
